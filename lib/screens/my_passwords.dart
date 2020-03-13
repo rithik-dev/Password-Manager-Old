@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/screens/add_details.dart';
+import 'package:password_manager/screens/edit_details.dart';
 import 'package:password_manager/widgets/my_card.dart';
 
 class MyPasswords extends StatefulWidget {
@@ -12,17 +14,18 @@ class _MyPasswordsState extends State<MyPasswords> {
   List<Widget> getCardsList() {
     cards = [];
 
-    // TODO: read from file here passwords
+    // TODO: read from file here passwords and generate list cards
+
     cards.addAll([
       MyCard(fields: {
-        "title": "G Mail",
-        "E Mail": "email1",
+        "Title": "Gmail",
+        "Email": "email1",
         "Password": "pass1",
       }),
       MyCard(fields: {
-        "title": "Instagram",
+        "Title": "Instagram",
         "Username": "user1",
-        "E Mail": "email2",
+        "Email": "email2",
         "Password": "pass2",
       }),
     ]);
@@ -32,10 +35,18 @@ class _MyPasswordsState extends State<MyPasswords> {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: getCardsList(),
+      child: Scaffold(
+        body: ListView(
+          children: getCardsList(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddDetails()));
+          },
+          child: Icon(Icons.add, size: 30.0),
+          backgroundColor: Colors.green,
+        ),
       ),
     );
   }

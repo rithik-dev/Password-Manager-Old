@@ -5,3 +5,7 @@ const TextStyle kCardTitleTextStyle = TextStyle(
   fontSize: 20.0,
   fontWeight: FontWeight.bold
 );
+
+const TextStyle kCardContentTextStyle = TextStyle(
+  fontSize: 20.0,
+);
