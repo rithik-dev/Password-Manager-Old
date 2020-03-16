@@ -18,24 +18,24 @@ class _MyAppState extends State<MyApp> {
       home: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.format_list_bulleted),
-              onPressed: () {
-                sideNavBarOpened = !sideNavBarOpened;
-
-                if (sideNavBarOpened) {
-                  print("open side navbar");
-                  //TODO: open side navbar (show logged in name on top)
-                  //TODO: options : create strong password , my passwords , change password , logout
-                  //TODO: exports password to xml file? , create xml file for passwords
-                  //TODO: load passwords from xml file
-                  //TODO: copy button to copy email/password directly to clipboard
-                } else {
-                  //TODO: close navbar here
-                  print("Closed side navbar");
-                }
-              },
-            ),
+//            leading: IconButton(
+//              icon: Icon(Icons.format_list_bulleted),
+//              onPressed: () {
+//                sideNavBarOpened = !sideNavBarOpened;
+//
+//                if (sideNavBarOpened) {
+//                  print("open side navbar");
+//                  //TODO: open side navbar (show logged in name on top)
+//                  //TODO: options : create strong password , my passwords , change password , logout
+//                  //TODO: exports password to xml file? , create xml file for passwords
+//                  //TODO: load passwords from xml file
+//                  //TODO: copy button to copy email/password directly to clipboard
+//                } else {
+//                  //TODO: close navbar here
+//                  print("Closed side navbar");
+//                }
+//              },
+//            ),
             title: Text('Password Manager'),
             centerTitle: true,
           ),

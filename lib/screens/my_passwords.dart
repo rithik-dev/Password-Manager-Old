@@ -9,51 +9,16 @@ class MyPasswords extends StatefulWidget {
 }
 
 class _MyPasswordsState extends State<MyPasswords> {
-
   List cardsDataFromDB = [];
   List<Widget> cards = [];
-
-  void deleteCard(int index){
-    getFileData();
-    setState(() {
-      cardsDataFromDB.removeAt(index);
-    });
-    FileUtils.writeData(cardsDataFromDB);
-  }
 
   @override
   void initState() {
     // TODO: implement initState
-//    setState(() {
-    getFileData();
-//    });
+//      getFileData();
+    getCardsList();
     super.initState();
   }
-
-//  @override
-//  void initState() {
-  //read from DB here passwords and generate list cardsDataFromDB
-
-//    getFileData();
-
-//    FileUtils.readData();
-
-//    cardsDataFromDB = [
-//      {
-//        "Title": "Gmail",
-//        "Email": "email1",
-//        "Password": "pass1",
-//      },
-//      {
-//        "Title": "Instagram",
-//        "Username": "user1",
-//        "Email": "email2",
-//        "Password": "pass2",
-//      }
-//    ];
-
-//    super.initState();
-//  }
 
   Future<void> getFileData() async {
     cardsDataFromDB = await FileUtils.readData();
@@ -63,9 +28,10 @@ class _MyPasswordsState extends State<MyPasswords> {
   List<Widget> getCardsList() {
     getFileData();
     cards = [];
-    for (Map cardData in cardsDataFromDB) {
-      cards.add(MyCard(fields: cardData));
-    }
+    if (cardsDataFromDB != null)
+      for (Map cardData in cardsDataFromDB) {
+        cards.add(MyCard(fields: cardData));
+      }
     return cards;
   }
 
@@ -101,9 +67,6 @@ class _MyPasswordsState extends State<MyPasswords> {
 
               FileUtils.writeData(cardsDataFromDB);
             }
-
-//            Navigator.push(
-//                context, MaterialPageRoute(builder: (context) => AddDetails()));
           },
           child: Icon(Icons.add, size: 30.0),
           backgroundColor: Colors.green,

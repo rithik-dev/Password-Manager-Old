@@ -8,10 +8,6 @@ import 'package:password_manager/screens/edit_details.dart';
 class MyCard extends StatefulWidget {
   final Map fields;
 
-  // email username password / custom fields?
-  //  title password compulsory fields .. rest add custom fields
-
-  //TODO: add edit icon functionality to change something
   //TODO: allow user to add different colors to different cards  (default background color: white?? )
 
   MyCard({@required this.fields});
@@ -37,11 +33,26 @@ class _MyCardState extends State<MyCard> {
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () {
+                onPressed: () async {
                   //TODO:allow user to edit credentials ..add new fields .. etc.
                   print("edit credentials here");
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditDetails()));
+//                  Navigator.push(context,
+//                      MaterialPageRoute(builder: (context) => EditDetails()));
+
+                  Map newFields = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return EditDetails(fields: widget.fields);
+                      },
+                    ),
+                  );
+
+                  if (newFields != null) {
+                    List data = await FileUtils.readData();
+                    data[int.parse(widget.fields['id'])] = newFields;
+                    FileUtils.writeData(data);
+                  }
                 },
               ),
               IconButton(
@@ -56,9 +67,8 @@ class _MyCardState extends State<MyCard> {
                     content: Text("Card Successfully Deleted"),
                     duration: Duration(seconds: 1),
                   ));
-
                 },
-              )
+              ),
             ],
           )
         ],
@@ -114,20 +124,3 @@ class _MyCardState extends State<MyCard> {
     );
   }
 }
-
-//Row(
-//children: <Widget>[
-//Text("$key : ***********", style: kCardContentTextStyle),
-//IconButton(
-//icon: Icon(Icons.content_copy),
-//onPressed: () {
-//Clipboard.setData(ClipboardData(text: widget.fields[key]));
-//
-//Scaffold.of(context).showSnackBar(SnackBar(
-//content: Text("$key Copied to Clipboard"),
-//duration: Duration(seconds: 1),
-//));
-//},
-//)
-//],
-//)

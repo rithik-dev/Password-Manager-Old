@@ -1,17 +1,23 @@
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter_string_encryption/flutter_string_encryption.dart';
+import 'package:password_manager/constants.dart' show key;
 
 class FileUtils {
+  static final cryptor = new PlatformStringCryptor();
+  static String encrypted, decrypted;
+
+  static const int LEVELS_OF_ENCRYPTION = 5;
+
   static Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-
     return directory.path;
   }
 
   static Future<File> get _localFile async {
     final path = await _localPath;
-    print("path to file $path");
+    print("PATH TO FILE : $path/db.txt");
     return File('$path/db.txt');
   }
 
@@ -21,9 +27,14 @@ class FileUtils {
     var jsonEncodedList = json.encode(cards);
 
     //TODO: encrypt data here
+    // 5 levels of encryption
+    for (int i = 0; i < LEVELS_OF_ENCRYPTION; i++) {
+      encrypted = await cryptor.encrypt(jsonEncodedList, key);
+      jsonEncodedList = encrypted;
+    }
 
     // Write the file.
-    return file.writeAsString('$jsonEncodedList');
+    return file.writeAsString('$encrypted');
   }
 
   static Future<List> readData() async {
@@ -40,13 +51,19 @@ class FileUtils {
       if (fileExists) {
         String contents = await file.readAsString();
 
-//      print("contents from file $contents");
-//      print(contents.runtimeType);
+        //TODO: decrypt contents here
+        try {
+          for (int i = 0; i < LEVELS_OF_ENCRYPTION; i++) {
+            decrypted = await cryptor.decrypt(contents, key);
+            contents = decrypted;
+          }
+        } on MacMismatchException {
+          // unable to decrypt (wrong key or forged data)
+          print("ERROR : UNABLE TO DECRYPT");
+          decrypted = "";
+        }
 
-        var decodedContents = json.decode("""$contents""");
-
-//        print("decoded contents from file $decodedContents");
-//      print(decodedContents.runtimeType);
+        var decodedContents = json.decode("""$decrypted""");
 
         return decodedContents;
       } else {

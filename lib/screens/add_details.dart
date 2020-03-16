@@ -20,12 +20,12 @@ class _AddDetailsState extends State<AddDetails> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.format_list_bulleted),
-            onPressed: () {
-              print("side bar");
-            },
-          ),
+//          leading: IconButton(
+//            icon: Icon(Icons.format_list_bulleted),
+//            onPressed: () {
+//              print("side bar");
+//            },
+//          ),
           title: Text('Password Manager'),
           centerTitle: true,
         ),
@@ -117,7 +117,6 @@ class _AddDetailsState extends State<AddDetails> {
                       padding: EdgeInsets.all(8.0),
                       splashColor: Colors.blueAccent,
                       onPressed: () {
-                        //FIXME: error in taking value of custom field .. user input value
                         if (!fieldsCreated.contains(tempKey)) {
                           if (!(tempKey == null || tempKey == "")) {
                             print("ADDING NEW CUSTOM FIELD");
@@ -172,26 +171,26 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: (value) {
-        fields[this.labelText] = value;
-      },
-      obscureText: this.labelText=="Password",
-      decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: "Enter ${this.labelText}",
-          labelText: this.labelText),
+    return ListTile(
+      title: TextField(
+        onChanged: (value) {
+          fields[this.labelText] = value;
+        },
+        obscureText: this.labelText == "Password",
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Enter ${this.labelText}",
+            labelText: this.labelText),
+      ),
+      trailing: (this.labelText == "Title" || this.labelText == "Password")
+          ? null
+          : IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                print("delete ${this.labelText}");
+                fields.remove(this.labelText);
+              },
+            ),
     );
   }
 }
-
-//TextField(
-//                                  onChanged: (value) {
-//                                    fields[tempKey] = value;
-//                                    tempKey = "";
-//                                  },
-//                                  decoration: InputDecoration(
-//                                      border: InputBorder.none,
-//                                      hintText: "Enter $tempKey",
-//                                      labelText: tempKey),
-//                                ),
