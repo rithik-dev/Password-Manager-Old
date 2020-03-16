@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:password_manager/constants.dart';
+import 'package:password_manager/file_utils.dart';
 import 'package:password_manager/screens/edit_details.dart';
 
 class MyCard extends StatefulWidget {
@@ -27,16 +28,38 @@ class _MyCardState extends State<MyCard> {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(widget.fields["Title"].toUpperCase() ?? "", // null operator
+          Text(
+              widget.fields["Title"] == null
+                  ? ""
+                  : widget.fields["Title"].toUpperCase(), // null operator
               style: kCardTitleTextStyle),
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              //TODO:allow user to edit credentials ..add new fields .. etc.
-              print("edit credentials here");
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => EditDetails()));
-            },
+          Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  //TODO:allow user to edit credentials ..add new fields .. etc.
+                  print("edit credentials here");
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EditDetails()));
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () async {
+                  print("DELETING CARD AT INDEX : ${fields['id']}");
+                  List tempFields = await FileUtils.readData();
+                  tempFields.removeAt(int.parse(fields['id']));
+                  FileUtils.writeData(tempFields);
+
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("Card Successfully Deleted"),
+                    duration: Duration(seconds: 1),
+                  ));
+
+                },
+              )
+            ],
           )
         ],
       ),
@@ -44,41 +67,28 @@ class _MyCardState extends State<MyCard> {
     ]);
 
     for (String key in fields.keys) {
-      if (key != "Title") if (key == "Password") {
-        cardColumns.add(Row(
-          children: <Widget>[
-            Text("$key : ***********", style: kCardContentTextStyle),
-            IconButton(
-              icon: Icon(Icons.content_copy),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: widget.fields[key]));
+      if (!(key == "Title" || key == "id"))
+        cardColumns.add(
+          ListTile(
+            title: Text(key,
+                style: TextStyle(
+                    color: Colors.yellow, fontWeight: FontWeight.bold)),
+            subtitle: Text(
+              key == "Password" ? '***********' : fields[key],
+              style: kCardContentTextStyle,
+            ),
+            trailing: IconButton(
+                icon: Icon(Icons.content_copy),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: widget.fields[key]));
 
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("$key Copied to Clipboard"),
-                  duration: Duration(seconds: 1),
-                ));
-              },
-            )
-          ],
-        ));
-      } else
-        // if key is not password
-        cardColumns.add(Row(
-          children: <Widget>[
-            Text("$key : ${fields[key]}", style: kCardContentTextStyle),
-            IconButton(
-              icon: Icon(Icons.content_copy),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: widget.fields[key]));
-
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("$key Copied to Clipboard"),
-                  duration: Duration(seconds: 1),
-                ));
-              },
-            )
-          ],
-        ));
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("$key Copied to Clipboard"),
+                    duration: Duration(seconds: 1),
+                  ));
+                }),
+          ),
+        );
     }
 
     return cardColumns;
@@ -104,3 +114,20 @@ class _MyCardState extends State<MyCard> {
     );
   }
 }
+
+//Row(
+//children: <Widget>[
+//Text("$key : ***********", style: kCardContentTextStyle),
+//IconButton(
+//icon: Icon(Icons.content_copy),
+//onPressed: () {
+//Clipboard.setData(ClipboardData(text: widget.fields[key]));
+//
+//Scaffold.of(context).showSnackBar(SnackBar(
+//content: Text("$key Copied to Clipboard"),
+//duration: Duration(seconds: 1),
+//));
+//},
+//)
+//],
+//)

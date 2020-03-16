@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager/screens/add_details.dart';
 import 'package:password_manager/screens/my_passwords.dart';
 
 void main() => runApp(MyApp());
