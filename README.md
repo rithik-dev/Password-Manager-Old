@@ -2,6 +2,8 @@
 
 A new Flutter application.
 
+Password Manager which uses local storage with encryption to read/write passwords etc.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
